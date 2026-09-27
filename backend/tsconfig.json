@@ -14,5 +14,7 @@
     "sourceMap": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  // Tests are run by vitest (no tsc needed) and must NOT ship to production:
+  // hosts like Render install prod-only deps, where vitest/@types are absent.
+  "exclude": ["node_modules", "dist", "src/test"]
 }

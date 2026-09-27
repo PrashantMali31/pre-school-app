@@ -1,0 +1,29 @@
+# Render Blueprint — one-click backend deploy.
+# Dashboard: New → Blueprint → select this repo. Then enter the two
+# manual values when prompted (DATABASE_URL from Neon, FRONTEND_URL
+# from Vercel) and Render creates the web service.
+#
+# NOTE: Postgres lives on Neon (free, permanent), NOT on Render —
+# Render's free Postgres expires, Neon does not. Run migrations once
+# from your machine:
+#   cd backend && DATABASE_URL="<neon-url>" npm run db:migrate
+
+services:
+  - type: web
+    name: preschool-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Render injects PORT automatically; src/index.ts reads process.env.PORT.
+      - key: DATABASE_URL
+        sync: false # paste Neon URL at deploy time (required)
+      - key: JWT_SECRET
+        generateValue: true # Render generates a 32+ char secret (required, min 32 chars in prod)
+      - key: FRONTEND_URL
+        sync: false # paste https://<your-app>.vercel.app after Vercel deploy (CORS)

@@ -12,6 +12,7 @@ services:
   - type: web
     name: preschool-api
     runtime: node
+    plan: free # stay on $0 Hobby/Free — without this Render defaults to paid Starter
     rootDir: backend
     buildCommand: npm install && npm run build
     startCommand: npm start

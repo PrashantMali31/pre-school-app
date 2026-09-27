@@ -1,0 +1,70 @@
+# ── Dependencies (heavy) ──
+node_modules/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+# NOTE: lockfiles (package-lock.json) are intentionally TRACKED — do not ignore them.
+
+# ── Secrets / env (never expose) ──
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+# keep examples tracked
+!.env.example
+!frontend/.env.example
+!backend/.env.example
+
+# ── Builds / outputs (heavy, regenerable) ──
+dist/
+build/
+.next/
+out/
+coverage/
+.nyc_output/
+*.tsbuildinfo
+next-env.d.ts
+
+# ── Logs ──
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+
+# ── OS ──
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+
+# ── IDE / editors ──
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ── Docker / local data ──
+pgdata/
+*.sql.gz
+*.dump
+
+# ── Misc secrets ──
+*.pem
+*.key
+*.p12
+*.pfx

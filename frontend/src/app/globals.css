@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --color-cream: #FFF9F1;
+  --color-ink: #1E1B2E;
+  --color-night: #0B0B13;
+  --color-panel: #161624;
+}
+
+:root {
+  color-scheme: light;
+}
+.dark {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+html, body {
+  background: #FFF9F1;
+  color: #1E1B2E;
+  font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dark body {
+  background: #0B0B13;
+  color: #F1EFFA;
+}
+
+/* Buttery theme cross-fade */
+.theme-anim, .theme-anim *, .theme-anim *::before, .theme-anim *::after {
+  transition: background-color .35s ease, border-color .35s ease;
+}
+
+::selection { background: #FFD6E3; }
+
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-thumb { background: #E9DCCF; border-radius: 99px; }
+*::-webkit-scrollbar-track { background: transparent; }
+
+.glass {
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+}
+.dark .glass {
+  background: rgba(17,17,28,0.72);
+  border-color: rgba(255,255,255,0.08);
+}
+
+/* ---------- Dark-mode surface remapping ----------
+   The app uses playful hard-coded pastel tokens. In dark mode we
+   remap the recurring ones so every page adapts with zero rewrites. */
+.dark .bg-white { background-color: #161624 !important; }
+.dark .from-white { --tw-gradient-from: #161624 !important; --tw-gradient-to: rgb(22 22 36 / 0) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+.dark [class*="bg-[#FFFEFB]"] { background-color: #161624 !important; }
+.dark [class*="to-[#FFF6EC]"] { --tw-gradient-to: #1C1C2E !important; }
+.dark [class*="bg-[#F6F0E6]"] { background-color: rgba(255,255,255,0.06) !important; }
+.dark [class*="hover:bg-[#EFE3D0]"]:hover { background-color: rgba(255,255,255,0.12) !important; }
+.dark [class*="bg-[#FFF1E2]"] { background-color: rgba(255,255,255,0.07) !important; }
+.dark [class*="hover:bg-[#FFF6EC]"]:hover { background-color: rgba(255,255,255,0.06) !important; }
+
+/* borders */
+.dark [class*="F1E6D8"],
+.dark [class*="F5EEDF"],
+.dark [class*="E5D9C5"],
+.dark [class*="EDE2D3"] { border-color: rgba(255,255,255,0.09) !important; }
+
+/* muted text tokens -> soft white */
+.dark [class*="8A84A0"] { color: rgba(255,255,255,0.55) !important; }
+.dark [class*="9A93B0"] { color: rgba(255,255,255,0.45) !important; }
+.dark [class*="5B5670"] { color: rgba(255,255,255,0.74) !important; }
+.dark [class*="6B6580"] { color: rgba(255,255,255,0.66) !important; }
+.dark [class*="3E3A55"] { color: rgba(255,255,255,0.86) !important; }
+
+.dark *::-webkit-scrollbar-thumb { background: #2E2E45; }
+
+.card-hover {
+  transition: transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s cubic-bezier(.22,1,.36,1);
+}
+.card-hover:hover {
+  transform: translateY(-3px);
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+@keyframes floaty {
+  0%,100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-8px) rotate(2deg); }
+}
+.animate-floaty { animation: floaty 5s ease-in-out infinite; }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Visible keyboard focus everywhere */
+:focus-visible {
+  outline: 2px solid #7C9DFF;
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+/* Skeleton shimmer */
+@keyframes shimmer {
+  from { background-position: -400px 0; }
+  to { background-position: 400px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, rgba(30,27,46,0.06) 25%, rgba(30,27,46,0.12) 37%, rgba(30,27,46,0.06) 63%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+.dark .skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.11) 37%, rgba(255,255,255,0.05) 63%);
+  background-size: 800px 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-floaty, .skeleton { animation: none; }
+}

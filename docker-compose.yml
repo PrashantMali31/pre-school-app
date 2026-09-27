@@ -1,0 +1,34 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    # distinct name: an older preschool-postgres already exists on this machine (:5433, Prisma schema) — leave it alone
+    container_name: preschool-pg-saas
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: preschool
+      POSTGRES_PASSWORD: preschool
+      POSTGRES_DB: preschool
+    ports:
+      - "5434:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U preschool -d preschool"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  adminer:
+    image: adminer:4
+    container_name: preschool-dbviewer
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+
+volumes:
+  pgdata:

@@ -1,0 +1,33 @@
+# dependencies (heavy)
+node_modules/
+
+# build output (heavy, regenerable)
+dist/
+
+# env / secrets (never expose)
+.env
+.env.local
+.env.*.local
+# keep example tracked
+!.env.example
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+
+# testing / coverage
+coverage/
+.nyc_output/
+
+# typescript
+*.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# drizzle local
+drizzle/*.sql.gz

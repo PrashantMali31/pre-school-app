@@ -156,7 +156,6 @@ export async function invoiceRoutes(app: FastifyInstance) {
 export async function eventRoutes(app: FastifyInstance) {
   app.get('/', { preHandler: [requireAuth, resolveTenant] }, async (req) => {
     const t = tenantOf(req);
-    const { isNull } = await import('drizzle-orm');
     const { page, limit, offset } = parsePaging(req.query as Record<string, unknown>);
     const where = and(eq(events.tenantId, t.id), isNull(events.deletedAt));
     const total = await db.select({ n: count() }).from(events).where(where).then((r) => Number(r[0]?.n ?? 0));
@@ -191,7 +190,6 @@ export async function eventRoutes(app: FastifyInstance) {
     if (!z.string().uuid().safeParse(id).success) {
       return reply.code(400).send({ error: { code: 'VALIDATION', message: 'Invalid id.' } });
     }
-    const { isNull } = await import('drizzle-orm');
     const cur = await db.select().from(events).where(and(eq(events.id, id), eq(events.tenantId, t.id), isNull(events.deletedAt))).then((r) => r[0]);
     if (!cur) return reply.code(404).send({ error: { code: 'NOT_FOUND', message: 'Event not found.' } });
     const row = await db.update(events).set({ ...parsed.data }).where(and(eq(events.id, id), eq(events.tenantId, t.id), isNull(events.deletedAt))).returning().then((r) => r[0]);
@@ -213,7 +211,6 @@ export async function eventRoutes(app: FastifyInstance) {
 export async function announcementRoutes(app: FastifyInstance) {
   app.get('/', { preHandler: [requireAuth, resolveTenant] }, async (req) => {
     const t = tenantOf(req);
-    const { desc, isNull } = await import('drizzle-orm');
     const { page, limit, offset } = parsePaging(req.query as Record<string, unknown>);
     const where = and(eq(announcements.tenantId, t.id), isNull(announcements.deletedAt));
     const total = await db.select({ n: count() }).from(announcements).where(where).then((r) => Number(r[0]?.n ?? 0));
@@ -241,7 +238,6 @@ export async function announcementRoutes(app: FastifyInstance) {
     if (!z.string().uuid().safeParse(id).success) {
       return reply.code(400).send({ error: { code: 'VALIDATION', message: 'Invalid id.' } });
     }
-    const { isNull } = await import('drizzle-orm');
     const cur = await db.select().from(announcements).where(and(eq(announcements.id, id), eq(announcements.tenantId, t.id), isNull(announcements.deletedAt))).then((r) => r[0]);
     if (!cur) return reply.code(404).send({ error: { code: 'NOT_FOUND', message: 'Announcement not found.' } });
     const row = await db.update(announcements).set({ ...parsed.data }).where(and(eq(announcements.id, id), eq(announcements.tenantId, t.id), isNull(announcements.deletedAt))).returning().then((r) => r[0]);
@@ -274,7 +270,6 @@ export async function announcementRoutes(app: FastifyInstance) {
 export async function enquiryRoutes(app: FastifyInstance) {
   app.get('/', { preHandler: [requireAuth, resolveTenant] }, async (req) => {
     const t = tenantOf(req);
-    const { desc } = await import('drizzle-orm');
     const { page, limit, offset } = parsePaging(req.query as Record<string, unknown>);
     const where = eq(enquiries.tenantId, t.id);
     const total = await db.select({ n: count() }).from(enquiries).where(where).then((r) => Number(r[0]?.n ?? 0));

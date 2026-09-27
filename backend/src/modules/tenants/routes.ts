@@ -11,7 +11,7 @@ export async function tenantRoutes(app: FastifyInstance) {
   // schools I belong to
   app.get('/mine', { preHandler: requireAuth }, async (req) => {
     const userId = (req.user as { sub: string }).sub;
-    const { memberships } = await import('../../db/schema');
+    const { memberships } = await import('../../db/schema.js');
     const mems = await db.select().from(memberships).where(eq(memberships.userId, userId));
     const out = [];
     for (const m of mems) {
@@ -26,7 +26,7 @@ export async function tenantRoutes(app: FastifyInstance) {
     const parsed = z.object({ name: z.string().trim().min(2).max(60), plan: z.enum(['Starter', 'Pro', 'Enterprise']).default('Starter') }).safeParse(req.body);
     if (!parsed.success) return reply.code(400).send({ error: { code: 'VALIDATION', message: parsed.error.issues[0]?.message } });
     const userId = (req.user as { sub: string }).sub;
-    const me = await db.select().from((await import('../../db/schema')).users).where(eq((await import('../../db/schema')).users.id, userId)).then((r) => r[0]);
+    const me = await db.select().from((await import('../../db/schema.js')).users).where(eq((await import('../../db/schema.js')).users.id, userId)).then((r) => r[0]);
     const base = slugify(parsed.data.name);
     let slug = base;
     let n = 2;
@@ -34,9 +34,9 @@ export async function tenantRoutes(app: FastifyInstance) {
     const tenant = await db.insert(tenants).values({ slug, name: parsed.data.name.trim(), plan: parsed.data.plan }).returning().then((r) => r[0]);
     await db.insert(schoolProfiles).values({ tenantId: tenant.id, name: tenant.name, principal: me?.name ?? '' });
     await db.insert(schoolOptions).values({ tenantId: tenant.id, ...DEFAULT_OPTIONS });
-    await db.insert((await import('../../db/schema')).memberships).values({ userId, tenantId: tenant.id, role: 'Admin' });
+    await db.insert((await import('../../db/schema.js')).memberships).values({ userId, tenantId: tenant.id, role: 'Admin' });
     // Subscription follows the chosen plan (test-mode charge recorded for paid plans).
-    const { startSubscription } = await import('../billing/routes');
+    const { startSubscription } = await import('../billing/routes.js');
     const code = parsed.data.plan.toLowerCase() as 'starter' | 'pro' | 'enterprise';
     await startSubscription(tenant.id, code, code === 'enterprise' ? 'custom' : 'monthly', userId);
     return reply.code(201).send({ data: tenant });
@@ -49,7 +49,7 @@ export async function tenantRoutes(app: FastifyInstance) {
     const userId = (req.user as { sub: string }).sub;
     const tenant = await db.select().from(tenants).where(eq(tenants.slug, slug)).then((r) => r[0]);
     if (!tenant) return reply.code(404).send({ error: { code: 'TENANT_NOT_FOUND', message: 'School not found.' } });
-    const { memberships } = await import('../../db/schema');
+    const { memberships } = await import('../../db/schema.js');
     const mem = await db.select().from(memberships).where(and(eq(memberships.userId, userId), eq(memberships.tenantId, tenant.id))).then((r) => r[0]);
     if (!mem) return reply.code(403).send({ error: { code: 'NOT_A_MEMBER', message: 'You are not a member of this school.' } });
     if (mem.role !== 'Admin') return reply.code(403).send({ error: { code: 'FORBIDDEN', message: 'Only an Admin can delete this school.' } });

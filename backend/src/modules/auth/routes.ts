@@ -88,7 +88,7 @@ export async function authRoutes(app: FastifyInstance) {
     await db.insert(schoolOptions).values({ tenantId: tenant.id, ...DEFAULT_OPTIONS });
     await db.insert(memberships).values({ userId: user.id, tenantId: tenant.id, role: 'Admin' });
     // Every school rides a subscription: free Starter from day one.
-    const { startSubscription } = await import('../billing/routes');
+    const { startSubscription } = await import('../billing/routes.js');
     await startSubscription(tenant.id, 'starter', 'monthly', user.id);
 
     const { accessToken, refresh } = await issueTokens(app, user.id, user.email);

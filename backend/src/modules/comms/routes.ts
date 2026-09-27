@@ -212,7 +212,7 @@ export async function commsRoutes(app: FastifyInstance) {
     // Paid totals from the payments table IF it exists (works pre-migration too).
     const paidByInvoice = new Map<string, number>();
     try {
-      const { payments } = await import('../../db/schema');
+      const { payments } = await import('../../db/schema.js');
       const rows = await db.select().from(payments).where(eq(payments.tenantId, t.id));
       for (const p of rows as Array<{ invoiceId: string; amountCents: number; voidedAt: unknown }>) {
         if (p.voidedAt) continue;
@@ -271,7 +271,7 @@ export async function commsRoutes(app: FastifyInstance) {
         .returning()
         .then((r) => r[0]);
       try {
-        const { sendSMS } = await import('./provider');
+        const { sendSMS } = await import('./provider.js');
         const res = await sendSMS(p.phone, body);
         const status = res.ok ? 'sent' : 'failed';
         if (res.ok) sent += 1;

@@ -54,7 +54,7 @@ export async function classRoutes(app: FastifyInstance) {
     if (!z.string().uuid().safeParse(id).success) {
       return reply.code(400).send({ error: { code: 'VALIDATION', message: 'Invalid id.' } });
     }
-    const { students, teachers } = await import('../../db/schema');
+    const { students, teachers } = await import('../../db/schema.js');
     const kids = await db.select({ id: students.id }).from(students).where(and(eq(students.tenantId, t.id), eq(students.classId, id))).limit(1);
     const staff = await db.select({ id: teachers.id }).from(teachers).where(and(eq(teachers.tenantId, t.id), eq(teachers.classId, id))).limit(1);
     if (kids.length > 0 || staff.length > 0) {
